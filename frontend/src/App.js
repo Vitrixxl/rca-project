@@ -3,6 +3,7 @@ import axios from 'axios';
 import TaskList from './components/TaskList';
 import TaskForm from './components/TaskForm';
 import SearchBar from './components/SearchBar';
+import FilterPanel from './components/FilterPanel';
 import Stats from './components/Stats';
 import './App.css';
 
@@ -50,13 +51,7 @@ function App() {
       <header><h1>📋 Task Manager</h1><Stats apiUrl={API_URL} /></header>
       <main>
         <SearchBar onSearch={searchTasks} />
-        <div className="filters">
-          {['all', 'active', 'done', 'today'].map(f => (
-            <button key={f} className={filter === f ? 'active' : ''} onClick={() => setFilter(f)}>
-              {f.charAt(0).toUpperCase() + f.slice(1)}
-            </button>
-          ))}
-        </div>
+        <FilterPanel currentFilter={filter} onFilterChange={setFilter} />
         <TaskForm onSubmit={addTask} />
         {loading ? <p className="loading">Loading...</p> : <TaskList tasks={tasks} onToggle={toggleTask} onDelete={deleteTask} />}
       </main>
