@@ -18,12 +18,14 @@ REDIS_URL = os.environ["REDIS_URL"]
 search_history = deque(maxlen=100)
 
 def get_db():
+    """Return the current request's database connection, creating one if needed."""
     if "db" not in g:
         g.db = psycopg2.connect(DATABASE_URL)
         g.db.autocommit = True
     return g.db
 
 def get_redis():
+    """Return the current request's Redis connection, creating one if needed."""
     if "redis" not in g:
         g.redis = redis.from_url(REDIS_URL)
     return g.redis
@@ -53,6 +55,7 @@ def after_request(response):
 
 @app.route("/health")
 def health():
+    """Check application and database health, return JSON status."""
     db_status = "ok"
     try:
         db = get_db()
@@ -65,6 +68,7 @@ def health():
 
 @app.route("/api/tasks", methods=["GET"])
 def list_tasks():
+    """List all tasks with optional filtering by status and date."""
     db = get_db()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     status = request.args.get("status")
@@ -94,6 +98,7 @@ def list_tasks():
 
 @app.route("/api/tasks", methods=["POST"])
 def create_task():
+    """Create a new task from JSON body. Requires 'title' field."""
     data = request.get_json()
     if not data or not data.get("title"):
         return jsonify({"error": "Title is required"}), 400
