@@ -8,6 +8,10 @@
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1"
   },
+  "devDependencies": {
+    "@testing-library/react": "^14.1.0",
+    "@testing-library/jest-dom": "^6.1.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
