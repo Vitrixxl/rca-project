@@ -1,5 +1,6 @@
 from models import Task  # noqa
 import os
+from collections import deque
 from datetime import datetime, timezone
 
 from flask import Flask, jsonify, request, g
@@ -14,7 +15,7 @@ CORS(app)
 DATABASE_URL = os.environ.get("DATABASE_URL", "postgres://taskuser:taskpass@database:5432/taskdb")
 REDIS_URL = os.environ["REDIS_URL"]
 
-search_history = []
+search_history = deque(maxlen=100)
 
 def get_db():
     if "db" not in g:
