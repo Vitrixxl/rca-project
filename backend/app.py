@@ -52,7 +52,15 @@ def after_request(response):
 
 @app.route("/health")
 def health():
-    return jsonify({"status": "ok", "timestamp": datetime.now(timezone.utc).isoformat()})
+    db_status = "ok"
+    try:
+        db = get_db()
+        cur = db.cursor()
+        cur.execute("SELECT 1")
+        cur.close()
+    except Exception:
+        db_status = "error"
+    return jsonify({"status": "ok", "database": db_status, "timestamp": datetime.now(timezone.utc).isoformat()})
 
 @app.route("/api/tasks", methods=["GET"])
 def list_tasks():
