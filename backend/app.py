@@ -76,7 +76,7 @@ def list_tasks():
         conditions.append("is_active = true" if status == "active" else "is_active = false")
     if today_only:
         conditions.append("DATE(created_at) = DATE(%s)")
-        params.append(datetime.now())
+        params.append(datetime.now(timezone.utc))
     if conditions:
         query += " WHERE " + " AND ".join(conditions)
     query += " ORDER BY created_at DESC"
