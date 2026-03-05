@@ -105,7 +105,7 @@ def create_task():
     db = get_db()
     cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cur.execute(
-        "INSERT INTO tasks (title, description, is_active, created_at, updated_at) VALUES (%s, %s, %s, %s, %s) RETURNING *",
+        "INSERT INTO tasks (title, description, is_active, created_at, updated_at) VALUES (%s, %s, %s, %s, %s) ON CONFLICT (title) DO UPDATE SET updated_at = EXCLUDED.updated_at RETURNING *",
         (data["title"], data.get("description", ""), True, datetime.now(timezone.utc), datetime.now(timezone.utc))
     )
     task = cur.fetchone()
